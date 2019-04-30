@@ -44,7 +44,7 @@ Parameter('kr_diff_ne_nev1', 0.1)
 Rule('NE_diff_NEv1', NE() | NEv1(), kf_diff_ne_nev1, kr_diff_ne_nev1)
 
 Parameter('kf_diff_ne_nev2', 0.1)
-Parameter('kr_diff_ne_nev2', 0.1)
+Parameter('kr_diff_ne_nev2', 0.075)
 Rule('NE_diff_NEv2', NE() | NEv2(), kf_diff_ne_nev2, kr_diff_ne_nev2)
 
 Parameter('kf_diff_nev1_nev2', 0.1)
@@ -61,7 +61,8 @@ x = sim.run(tspan)
 
 plt.figure()
 for obs in model.observables:
-    plt.plot(tspan, x.all[obs.name], label=obs.name)
+    label = obs.name[:obs.name.find('_')]
+    plt.plot(tspan, x.all[obs.name], lw=3, label=label)
 plt.xlabel('time')
 plt.ylabel('cell count')
 plt.legend(loc=0)
@@ -70,15 +71,16 @@ plt.tight_layout()
 cell_tot = np.array([sum(x.observables[i]) for i in range(len(x.observables))])
 
 plt.figure()
-plt.fill_between(tspan, x.all[model.observables[0].name] / cell_tot, label=model.observables[0].name)
+label = [obs.name[:obs.name.find('_')] for obs in model.observables]
+plt.fill_between(tspan, x.all[model.observables[0].name] / cell_tot, label=label[0])
 sum_prev = x.all[model.observables[0].name]
 for i in range(1,len(model.observables)-1):
-    plt.fill_between(tspan, (x.all[model.observables[i].name] + sum_prev) / cell_tot, sum_prev / cell_tot, label=model.observables[i].name)
+    plt.fill_between(tspan, (x.all[model.observables[i].name] + sum_prev) / cell_tot, sum_prev / cell_tot, label=label[i])
     sum_prev += x.all[model.observables[i].name]
-plt.fill_between(tspan, [1]*len(tspan), sum_prev / cell_tot, label=model.observables[-1].name)
+plt.fill_between(tspan, [1]*len(tspan), sum_prev / cell_tot, label=label[-1])
 plt.xlabel('time')
 plt.ylabel('cell fraction')
-plt.legend(loc=0)
+plt.legend(loc=0, framealpha=1)
 plt.tight_layout()
 
 plt.show()
