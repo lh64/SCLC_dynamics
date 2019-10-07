@@ -3,7 +3,7 @@ from pysb.integrate import odesolve
 import numpy as np
 import matplotlib.pyplot as plt
 
-def k_fate(ename, k_fate_0, KD_Kx_fate, k_fate_x, effector_cell_obs):
+def k_fate(ename, k_fate_0, k_fate_x, KD_Kx_fate, effector_cell_obs):
     return Expression(ename, (k_fate_0*KD_Kx_fate + k_fate_x*effector_cell_obs) / (KD_Kx_fate + effector_cell_obs))
 
 Model()
@@ -23,12 +23,12 @@ Parameter('k_TPC_div_0', 1) # TPCs divide approximately once per day in culture
 Parameter('k_TPC_div_x', 2)
 Parameter('KD_Kx_TPC_div', 1000)
 # Expression('k_TPC_div', (k_TPC_div_0*KD_Kx_TPC_div + k_TPC_div_x*Hes1_tot) / (KD_Kx_TPC_div + Hes1_tot))
-k_fate('k_TPC_div', k_TPC_div_0, KD_Kx_TPC_div, k_TPC_div_x, Hes1_tot)
+k_fate('k_TPC_div', k_TPC_div_0, k_TPC_div_x, KD_Kx_TPC_div, Hes1_tot)
 Parameter('k_TPC_die_0', 0.2)
 Parameter('k_TPC_die_x', 0.1)
 Parameter('KD_Kx_TPC_die', 1000)
 # Expression('k_TPC_die', (k_TPC_die_0*KD_Kx_TPC_die + k_TPC_die_x*Hes1_tot) / (KD_Kx_TPC_die + Hes1_tot))
-k_fate('k_TPC_die', k_TPC_die_0, KD_Kx_TPC_die, k_TPC_die_x, Hes1_tot)
+k_fate('k_TPC_die', k_TPC_die_0, k_TPC_die_x, KD_Kx_TPC_die, Hes1_tot)
 Rule('TPC_div', TPC() >> TPC() + TPC(), k_TPC_div)
 Rule('TPC_die', TPC() >> None, k_TPC_die)
 
@@ -37,7 +37,7 @@ Parameter('k_Hes1_div_0', 0.5) # Hes1+ cells have a lower division rate than TPC
 Parameter('k_Hes1_div_x', 0.25)
 Parameter('KD_Kx_Hes1_div', 1000)
 # Expression('k_Hes1_div', (k_Hes1_div_0*KD_Kx_Hes1_div + k_Hes1_div_x*TPC_tot) / (KD_Kx_Hes1_div + TPC_tot))
-k_fate('k_Hes1_div', k_Hes1_div_0, KD_Kx_Hes1_div, k_Hes1_div_x, TPC_tot)
+k_fate('k_Hes1_div', k_Hes1_div_0, k_Hes1_div_x, KD_Kx_Hes1_div, TPC_tot)
 Parameter('k_Hes1_die', 0.2)
 Rule('Hes1_div', Hes1() >> Hes1() + Hes1(), k_Hes1_div)
 Rule('Hes1_die', Hes1() >> None, k_Hes1_die)
