@@ -8,16 +8,14 @@ import numpy as np
 from pydream.parameters import SampledParam
 from pydream.convergence import Gelman_Rubin
 from scipy.stats import norm,uniform
-from SCLC_4state import model
+from four_state_sclc import model
 import seaborn as sns
 from matplotlib import pyplot as plt
 import copy
 from itertools import chain
-    
-### TEST CHANGE ###
 
 # DREAM Settings
-# Number of chains - should be at least 3.
+# Number of chains - at least 3.
 nchains = 5
 # Number of iterations
 niterations = 10000
@@ -26,7 +24,7 @@ niterations = 10000
 tspan = np.linspace(0,100, 101)
 solver = ScipyOdeSimulator(model)
 param_values = np.array([p.value for p in model.parameters])
-parameters_idxs = list(np.arange(1,30))
+parameters_idxs = list(np.arange(1,len(param_values)))
 rates_mask = np.concatenate((np.zeros(1,dtype=bool),np.ones(len(param_values[1:]),dtype=bool)))
 starting_position = np.log10(param_values[rates_mask])
 starts = [np.array(starting_position) for i in range(nchains)]
